@@ -1,8 +1,8 @@
 import version from '../../package.json';
 import Router from 'express';
+import elasticsearch from 'elasticsearch';
+import moment from 'moment';
 
-var moment = require('moment');
-const elasticsearch = require('elasticsearch');
 const esClient = new elasticsearch.Client({
     host: '192.168.31.215:9200',
     log: 'error'
@@ -78,9 +78,10 @@ export default ({
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
-                if (results.hits.total > 0) console.log(`returned article titles:`);
-                results.hits.hits.forEach((hit, index) => console.log(`\t${++index} - ${hit._source.remote_addr} (score: ${hit._score})`));
-                console.log(JSON.stringify(results, null, 4));
+                if(config.debug){
+                    console.log(JSON.stringify(results, null, 4));
+                }
+                
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
@@ -156,9 +157,10 @@ export default ({
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
-                if (results.hits.total > 0) console.log(`returned article titles:`);
-                results.hits.hits.forEach((hit, index) => console.log(`\t${++index} - ${hit._source.remote_addr} (score: ${hit._score})`));
-                console.log(JSON.stringify(results, null, 4));
+                if(config.debug){
+                    console.log(JSON.stringify(results, null, 4));
+                }
+                
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
@@ -265,9 +267,10 @@ export default ({
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
-                if (results.hits.total > 0) console.log(`returned article titles:`);
-                results.hits.hits.forEach((hit, index) => console.log(`\t${++index} - ${hit._source.remote_addr} (score: ${hit._score})`));
-                console.log(JSON.stringify(results, null, 4));
+                if(config.debug){
+                    console.log(JSON.stringify(results, null, 4));
+                }
+                
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
@@ -333,7 +336,11 @@ export default ({
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
-                // console.log(JSON.stringify(results, null, 4));
+                if(config.debug){
+                    console.log(JSON.stringify(results, null, 4));
+                }
+                
+                console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
                 results.aggregations.methodResponse.buckets.forEach((hit, index) => {
