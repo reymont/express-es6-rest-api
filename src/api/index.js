@@ -1,10 +1,5 @@
-import {
-    version
-} from '../../package.json';
-import {
-    Router
-} from 'express';
-import facets from './facets';
+import version from '../../package.json';
+import Router from 'express';
 
 var moment = require('moment');
 const elasticsearch = require('elasticsearch');
@@ -297,11 +292,11 @@ export default ({
 
     //调用次数
     api.use('/elk/response', (req, res) => {
-        let start = req.query.start==null?moment().subtract(7, 'days').valueOf():req.query.start;
-        let end = req.query.end==null?moment().endOf('day').valueOf():req.query.end;
+        let start = req.query.start == null ? moment().subtract(7, 'days').valueOf() : req.query.start;
+        let end = req.query.end == null ? moment().endOf('day').valueOf() : req.query.end;
 
-        console.log("start = "+start)
-        console.log("end = "+end)
+        console.log("start = " + start)
+        console.log("end = " + end)
         let body = {
             "query": {
                 "bool": {
@@ -338,7 +333,7 @@ export default ({
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
-               // console.log(JSON.stringify(results, null, 4));
+                // console.log(JSON.stringify(results, null, 4));
 
                 var jsonResult = new Array();
                 results.aggregations.methodResponse.buckets.forEach((hit, index) => {
@@ -352,8 +347,8 @@ export default ({
 
                     jsonResult[index] = jsonResultItem
                 });
- 
-                
+
+
                 res.json({
                     data: jsonResult
                 });
