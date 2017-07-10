@@ -6,6 +6,7 @@ import {
 } from 'express';
 import facets from './facets';
 
+var moment = require('moment');
 const elasticsearch = require('elasticsearch');
 const esClient = new elasticsearch.Client({
     host: '192.168.31.215:9200',
@@ -296,15 +297,19 @@ export default ({
 
     //调用次数
     api.use('/elk/response', (req, res) => {
+        let start = req.query.start==null?moment().subtract(7, 'days').valueOf():req.query.start;
+        let end = req.query.end==null?moment().endOf('day').valueOf():req.query.end;
 
+        console.log("start = "+start)
+        console.log("end = "+end)
         let body = {
             "query": {
                 "bool": {
                     "filter": [{
                         "range": {
                             "@timestamp": {
-                                "from": "1499483992610",
-                                "to": "1499583992610",
+                                "from": start,
+                                "to": end,
                                 "include_lower": true,
                                 "include_upper": true
                             }
@@ -333,10 +338,7 @@ export default ({
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
-                if (results.hits.total > 0) console.log(`returned article titles:`);
-                results.hits.hits.forEach((hit, index) => console.log(`\t${++index} - ${hit._source.remote_addr} (score: ${hit._score})`));
-                console.log(JSON.stringify(results, null, 4));
-                console.log(`aggregations values.`);
+               // console.log(JSON.stringify(results, null, 4));
 
                 var jsonResult = new Array();
                 results.aggregations.methodResponse.buckets.forEach((hit, index) => {
@@ -350,7 +352,8 @@ export default ({
 
                     jsonResult[index] = jsonResultItem
                 });
-                console.log(new Date().getTime())
+ 
+                
                 res.json({
                     data: jsonResult
                 });
