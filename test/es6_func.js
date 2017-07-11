@@ -105,3 +105,30 @@ var comparator = (a, b) => a - b;
 
 console.log(typeof comparator);                 // "function"
 console.log(comparator instanceof Function);    // true
+
+var moment = require('moment')
+
+var getStart = (start) => {
+    if(start)return start;
+    else return moment().subtract(7, 'days').valueOf();
+};
+var ss = getStart()
+console.log(ss)
+var ss = getStart(12121)
+console.log(ss)
+
+let variable1;
+let variable2 = variable1  || '';
+console.log(variable2 === ''); // prints true
+
+variable1 = 'foo';
+variable2 = variable1  || '';
+console.log(variable2); // prints foo
+
+var getEnd = (end) => end||moment().endOf('day').valueOf();
+getStart = (start) => start||moment().subtract(7, 'days').valueOf();
+var ss = getStart()
+console.log(ss)
+var ss = getStart(12121)
+console.log(ss)
+

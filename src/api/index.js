@@ -3,6 +3,9 @@ import Router from 'express';
 import elasticsearch from 'elasticsearch';
 import moment from 'moment';
 
+const getStart = (start) => start||moment().subtract(7, 'days').valueOf();
+const getEnd = (end) => end||moment().endOf('day').valueOf();
+
 const esClient = new elasticsearch.Client({
     host: '192.168.31.215:9200',
     log: 'error'
@@ -29,8 +32,8 @@ export default ({
                     "filter": [{
                         "range": {
                             "@timestamp": {
-                                "from": "1499483992610",
-                                "to": "1499583992610",
+                                "from": getStart(req.query.start),
+                                "to": getEnd(req.query.end),
                                 "include_lower": true,
                                 "include_upper": true
                             }
@@ -45,8 +48,8 @@ export default ({
                         "interval": "day",
                         "min_doc_count": 0,
                         "extended_bounds": {
-                            "min": "1499483992610",
-                            "max": "1499583992610"
+                            "min": getStart(req.query.start),
+                            "max": getEnd(req.query.end)
                         }
                     },
                     "aggs": {
@@ -121,8 +124,8 @@ export default ({
                     "filter": [{
                         "range": {
                             "@timestamp": {
-                                "from": "1499483992610",
-                                "to": "1499583992610",
+                                "from": getStart(req.query.start),
+                                "to": getEnd(req.query.end),
                                 "include_lower": true,
                                 "include_upper": true
                             }
@@ -191,8 +194,8 @@ export default ({
                     "filter": [{
                         "range": {
                             "@timestamp": {
-                                "from": "1499483992610",
-                                "to": "1499583992610",
+                                "from": getStart(req.query.start),
+                                "to": getEnd(req.query.end),
                                 "include_lower": true,
                                 "include_upper": true
                             }
@@ -294,19 +297,14 @@ export default ({
 
     //调用次数
     api.use('/elk/response', (req, res) => {
-        let start = req.query.start == null ? moment().subtract(7, 'days').valueOf() : req.query.start;
-        let end = req.query.end == null ? moment().endOf('day').valueOf() : req.query.end;
-
-        console.log("start = " + start)
-        console.log("end = " + end)
         let body = {
             "query": {
                 "bool": {
                     "filter": [{
                         "range": {
                             "@timestamp": {
-                                "from": start,
-                                "to": end,
+                                "from": getStart(req.query.start),
+                                "to": getEnd(req.query.end),
                                 "include_lower": true,
                                 "include_upper": true
                             }
