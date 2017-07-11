@@ -16,8 +16,7 @@ const search = function search(index, body) {
 };
 
 export default ({
-    config,
-    db
+    config
 }) => {
     let api = Router();
 
@@ -78,10 +77,10 @@ export default ({
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
-                if(config.debug){
+                if (config.debug) {
                     console.log(JSON.stringify(results, null, 4));
                 }
-                
+
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
@@ -157,10 +156,10 @@ export default ({
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
-                if(config.debug){
+                if (config.debug) {
                     console.log(JSON.stringify(results, null, 4));
                 }
-                
+
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
@@ -267,10 +266,10 @@ export default ({
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
-                if(config.debug){
+                if (config.debug) {
                     console.log(JSON.stringify(results, null, 4));
                 }
-                
+
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
@@ -336,10 +335,10 @@ export default ({
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
-                if(config.debug){
+                if (config.debug) {
                     console.log(JSON.stringify(results, null, 4));
                 }
-                
+
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
