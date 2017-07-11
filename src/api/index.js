@@ -87,9 +87,9 @@ export default ({
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
-                results.aggregations.result_agg.buckets.forEach((hit, index) => {
+                results.aggregations.result_agg.buckets.forEach((hit, index = index++) => {
 
-                    console.log(`\t${++index} - ${hit.key} - ${hit.doc_count} `);
+                    console.log(`\t${index} - ${hit.key} - ${hit.doc_count} `);
                     let jsonResultItem = new Object();
                     //jsonResultItem.index = index
                     jsonResultItem.key = hit.key
@@ -166,9 +166,9 @@ export default ({
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
-                results.aggregations.methodCount.buckets.forEach((hit, index) => {
+                results.aggregations.methodCount.buckets.forEach((hit, index = index++) => {
 
-                    console.log(`\t${++index} - ${hit.key} - ${hit.doc_count} `);
+                    console.log(`\t${index} - ${hit.key} - ${hit.doc_count} `);
                     let jsonResultItem = new Object();
                     //jsonResultItem.index = index
                     jsonResultItem.key = hit.key
@@ -276,9 +276,9 @@ export default ({
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
-                results.aggregations.range_status.buckets.forEach((hit, index) => {
+                results.aggregations.range_status.buckets.forEach((hit, index = index++) => {
 
-                    console.log(`\t${++index} - ${hit.key} - ${hit.doc_count} `);
+                    console.log(`\t${index} - ${hit.key} - ${hit.doc_count} `);
                     let jsonResultItem = new Object();
                     //jsonResultItem.index = index
                     jsonResultItem.key = hit.key
@@ -340,9 +340,9 @@ export default ({
                 console.log(`aggregations values.`);
 
                 var jsonResult = new Array();
-                results.aggregations.methodResponse.buckets.forEach((hit, index) => {
+                results.aggregations.methodResponse.buckets.forEach((hit, index = index++) => {
 
-                    console.log(`\t${++index} - ${hit.key} - ${hit.doc_count} `);
+                    console.log(`\t${index} - ${hit.key} - ${hit.doc_count} `);
                     let jsonResultItem = new Object();
                     //jsonResultItem.index = index
                     jsonResultItem.key = hit.key
