@@ -88,23 +88,12 @@ export default ({
 
                 var jsonResult = new Array();
                 results.aggregations.result_agg.buckets.forEach((hit, index = index++) => {
-
-                    console.log(`\t${index} - ${hit.key} - ${hit.doc_count} `);
-                    let jsonResultItem = new Object();
-                    //jsonResultItem.index = index
-                    jsonResultItem.key = hit.key
-                    jsonResultItem.doc_count = hit.doc_count
-                    jsonResultItem.data = new Array();
-
-                    hit.methodCount.buckets.forEach((hit, index) => {
-                        let request = new Object();
-                        request.key = hit.key
-                        request.doc_count = hit.doc_count
-                        request.value = hit.sum_request_time.value
-                        jsonResultItem.data[index] = request;
+                    let data = new Array();
+                    hit.methodCount.buckets.forEach((hit, index = index++) => {
+                        data[index] = {key:hit.key,doc_count:hit.doc_count,value:hit.sum_request_time.value}
                     });
-
-                    jsonResult[index] = jsonResultItem
+                    jsonResult[index] = {key:hit.key,doc_count:hit.doc_count,data:data}
+                    console.log(JSON.stringify(jsonResult[index]));
                 });
                 console.log(new Date().getTime())
                 res.json({
@@ -162,19 +151,11 @@ export default ({
                 if (config.debug) {
                     console.log(JSON.stringify(results, null, 4));
                 }
-
                 console.log(`aggregations values.`);
-
                 var jsonResult = new Array();
                 results.aggregations.methodCount.buckets.forEach((hit, index = index++) => {
-
-                    console.log(`\t${index} - ${hit.key} - ${hit.doc_count} `);
-                    let jsonResultItem = new Object();
-                    //jsonResultItem.index = index
-                    jsonResultItem.key = hit.key
-                    jsonResultItem.doc_count = hit.doc_count
-
-                    jsonResult[index] = jsonResultItem
+                    jsonResult[index] = {key:hit.key,doc_count:hit.doc_count}
+                    console.log(JSON.stringify(jsonResult[index]));
                 });
                 console.log(new Date().getTime())
                 res.json({
@@ -277,14 +258,8 @@ export default ({
 
                 var jsonResult = new Array();
                 results.aggregations.range_status.buckets.forEach((hit, index = index++) => {
-
-                    console.log(`\t${index} - ${hit.key} - ${hit.doc_count} `);
-                    let jsonResultItem = new Object();
-                    //jsonResultItem.index = index
-                    jsonResultItem.key = hit.key
-                    jsonResultItem.doc_count = hit.doc_count
-
-                    jsonResult[index] = jsonResultItem
+                    jsonResult[index] = {key:hit.key,doc_count:hit.doc_count}
+                    console.log(JSON.stringify(jsonResult[index]));
                 });
                 console.log(new Date().getTime())
                 res.json({
@@ -341,15 +316,8 @@ export default ({
 
                 var jsonResult = new Array();
                 results.aggregations.methodResponse.buckets.forEach((hit, index = index++) => {
-
-                    console.log(`\t${index} - ${hit.key} - ${hit.doc_count} `);
-                    let jsonResultItem = new Object();
-                    //jsonResultItem.index = index
-                    jsonResultItem.key = hit.key
-                    jsonResultItem.doc_count = hit.doc_count
-                    jsonResultItem.sum_response_time = hit.sum_response_time.value
-
-                    jsonResult[index] = jsonResultItem
+                    jsonResult[index] = {key:hit.key,doc_count:hit.doc_count,sum_response_time:hit.sum_response_time.value}
+                    console.log(JSON.stringify(jsonResult[index]));
                 });
 
 
