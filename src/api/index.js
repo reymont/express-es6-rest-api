@@ -27,7 +27,6 @@ export default ({
     api.use('/elk/cost', (req, res) => {
 
         let body = {
-            "_source":["@timestamp","uri","request_time"],
             "query": {
                 "bool": {
                     "filter": [{
@@ -290,8 +289,7 @@ export default ({
         let body = {
             "query": {
                 "bool": {
-                    "filter": [
-                        {
+                    "filter": [{
                         "range": {
                             "@timestamp": {
                                 "from": getStart(req.query.start),
@@ -299,8 +297,8 @@ export default ({
                                 "include_lower": true,
                                 "include_upper": true
                             }
-                        }}
-                    ]
+                        }
+                    }]
                 }
             },
             "aggs": {
@@ -321,7 +319,21 @@ export default ({
                 }
             }
         };
-        if(req.query.apiPrefix){body.query.bool.filter[1] = {"prefix":{"uri.keyword":req.query.apiPrefix}}}
+        if (req.query.apiPrefix) {
+            body.query.bool.filter[body.query.bool.filter.length] = {
+                "prefix": {
+                    "uri.keyword": req.query.apiPrefix
+                }
+            }
+        }
+        if (req.query.serverName) {
+            body.query.bool.filter[body.query.bool.filter.length] = {
+                "term": {
+                    "server_name.keyword": req.query.serverName
+                }
+            }
+        }
+
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
