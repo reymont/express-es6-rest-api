@@ -3,8 +3,8 @@ import Router from 'express';
 import elasticsearch from 'elasticsearch';
 import moment from 'moment';
 
-const getStart = (start) => start||moment().subtract(7, 'days').valueOf();
-const getEnd = (end) => end||moment().endOf('day').valueOf();
+const getStart = (start) => start || moment().subtract(7, 'days').valueOf();
+const getEnd = (end) => end || moment().endOf('day').valueOf();
 
 const esClient = new elasticsearch.Client({
     host: '192.168.31.215:9200',
@@ -27,6 +27,7 @@ export default ({
     api.use('/elk/cost', (req, res) => {
 
         let body = {
+            "_source":["@timestamp","uri","request_time"],
             "query": {
                 "bool": {
                     "filter": [{
@@ -90,9 +91,17 @@ export default ({
                 results.aggregations.result_agg.buckets.forEach((hit, index = index++) => {
                     let data = new Array();
                     hit.methodCount.buckets.forEach((hit, index = index++) => {
-                        data[index] = {key:hit.key,doc_count:hit.doc_count,value:hit.sum_request_time.value}
+                        data[index] = {
+                            key: hit.key,
+                            doc_count: hit.doc_count,
+                            value: hit.sum_request_time.value
+                        }
                     });
-                    jsonResult[index] = {key:hit.key,doc_count:hit.doc_count,data:data}
+                    jsonResult[index] = {
+                        key: hit.key,
+                        doc_count: hit.doc_count,
+                        data: data
+                    }
                     console.log(JSON.stringify(jsonResult[index]));
                 });
                 console.log(new Date().getTime())
@@ -154,7 +163,10 @@ export default ({
                 console.log(`aggregations values.`);
                 var jsonResult = new Array();
                 results.aggregations.methodCount.buckets.forEach((hit, index = index++) => {
-                    jsonResult[index] = {key:hit.key,doc_count:hit.doc_count}
+                    jsonResult[index] = {
+                        key: hit.key,
+                        doc_count: hit.doc_count
+                    }
                     console.log(JSON.stringify(jsonResult[index]));
                 });
                 console.log(new Date().getTime())
@@ -258,7 +270,10 @@ export default ({
 
                 var jsonResult = new Array();
                 results.aggregations.range_status.buckets.forEach((hit, index = index++) => {
-                    jsonResult[index] = {key:hit.key,doc_count:hit.doc_count}
+                    jsonResult[index] = {
+                        key: hit.key,
+                        doc_count: hit.doc_count
+                    }
                     console.log(JSON.stringify(jsonResult[index]));
                 });
                 console.log(new Date().getTime())
@@ -275,7 +290,8 @@ export default ({
         let body = {
             "query": {
                 "bool": {
-                    "filter": [{
+                    "filter": [
+                        {
                         "range": {
                             "@timestamp": {
                                 "from": getStart(req.query.start),
@@ -283,8 +299,8 @@ export default ({
                                 "include_lower": true,
                                 "include_upper": true
                             }
-                        }
-                    }]
+                        }}
+                    ]
                 }
             },
             "aggs": {
@@ -305,6 +321,7 @@ export default ({
                 }
             }
         };
+        if(req.query.apiPrefix){body.query.bool.filter[1] = {"prefix":{"uri.keyword":req.query.apiPrefix}}}
 
         search('logstash-*', body).then(results => {
                 console.log(`found ${results.hits.total} items in ${results.took}ms`);
@@ -316,7 +333,11 @@ export default ({
 
                 var jsonResult = new Array();
                 results.aggregations.methodResponse.buckets.forEach((hit, index = index++) => {
-                    jsonResult[index] = {key:hit.key,doc_count:hit.doc_count,sum_response_time:hit.sum_response_time.value}
+                    jsonResult[index] = {
+                        key: hit.key,
+                        doc_count: hit.doc_count,
+                        sum_response_time: hit.sum_response_time.value
+                    }
                     console.log(JSON.stringify(jsonResult[index]));
                 });
 
