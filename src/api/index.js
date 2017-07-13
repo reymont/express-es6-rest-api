@@ -98,9 +98,7 @@ export default ({
                     console.log(JSON.stringify(jsonResult[index]));
                 });
                 console.log(new Date().getTime())
-                res.json({
-                    data: jsonResult
-                });
+                res.json(jsonResult);
             })
             .catch(console.error);
 
@@ -296,9 +294,7 @@ export default ({
                     console.log(JSON.stringify(jsonResult[index]));
                 });
                 console.log(new Date().getTime())
-                res.json({
-                    data: jsonResult
-                });
+                res.json(jsonResult);
             })
             .catch(console.error);
 
